@@ -1,8 +1,8 @@
 nodes:
   - address: ubuntuvm
-    user: user1
+    user: packer
     role:
       - controlplane
       - etcd
       - worker
-    ssh_key_path: /home/user1/.ssh/id_rsa
+    ssh_key_path: /home/packer/.ssh/id_rsa

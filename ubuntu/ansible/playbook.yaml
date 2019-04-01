@@ -4,7 +4,6 @@
     gather_facts: yes
 
     tasks:
-
       - name: modprobe - load kernel modules
         modprobe:
           name: "{{ item }}"
@@ -69,7 +68,7 @@
 
       - name: Add generated key to authorized keys
         authorized_key:
-          user: "{{ssh_username}}"
+          user: "{{ ssh_username }}"
           key: "{{ lookup('file','../id_rsa.pub')}}"
         tags:
           - ssh_keys
@@ -118,38 +117,19 @@
           owner: "{{ ssh_username }}"
         tags:
           - rke
-
-      # - name: copy rke binary
-      #   copy:
-      #     src: ../rke/rke
-      #     dest: "/home/{{ ssh_username }}/rke"
-      #     mode: 0744
-      #     owner: "{{ ssh_username }}"
+          
+      # - name: bootstrap the cluster using rke
+      #   shell: "/home/{{ ssh_username }}/rke up --config /home/{{ ssh_username }}/cluster.yaml"
       #   tags:
       #     - rke
 
-      - name: copy cluster.yaml
-        copy:
-          src: ../rke/cluster.yaml
-          dest: "/home/{{ ssh_username }}/cluster.yaml"
-          owner: "{{ ssh_username }}"
-        tags:
-          - rke
-
-
-      - name: bootstrap the cluster using rke
-        shell: "/home/{{ ssh_username }}/rke up --config /home/{{ ssh_username }}/cluster.yaml"
-        tags:
-          - rke
-
-
-      - name: copy kube_config file to host running packer
-        fetch:
-          src: "/home/{{ ssh_username }}/kube_config_cluster.yaml"
-          dest: ../kube_config_cluster.yaml
-          flat: yes
-        tags:
-          - rke
+      # - name: copy kube_config file to host running packer
+      #   fetch:
+      #     src: "/home/{{ ssh_username }}/kube_config_cluster.yaml"
+      #     dest: ../kube_config_cluster.yaml
+      #     flat: yes
+      #   tags:
+      #     - rke
 
       - name: install kubectl
         get_url:
@@ -172,8 +152,8 @@
             url: https://raw.githubusercontent.com/kanuahs/flask-sample-app/master/kubernetes-service.yaml
             dest: "/home/{{ ssh_username }}/kubernetes-service.yaml"
 
-      - name: create a sample deployment
-        shell: "/home/{{ ssh_username }}/kubectl --kubeconfig=/home/{{ ssh_username }}/kube_config_cluster.yaml apply -f /home/{{ ssh_username }}/kubernetes-deployment.yaml"
+      # - name: create a sample deployment
+      #   shell: "/home/{{ ssh_username }}/kubectl --kubeconfig=/home/{{ ssh_username }}/kube_config_cluster.yaml apply -f /home/{{ ssh_username }}/kubernetes-deployment.yaml"
 
-      - name: create a sample service
-        shell: "/home/{{ ssh_username }}/kubectl --kubeconfig=/home/{{ ssh_username }}/kube_config_cluster.yaml apply -f /home/{{ ssh_username }}/kubernetes-service.yaml"
+      # - name: create a sample service
+      #   shell: "/home/{{ ssh_username }}/kubectl --kubeconfig=/home/{{ ssh_username }}/kube_config_cluster.yaml apply -f /home/{{ ssh_username }}/kubernetes-service.yaml"
